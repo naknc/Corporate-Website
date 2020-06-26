@@ -7,7 +7,7 @@ using System.Web;
 
 namespace KurumsalWeb.Models.Model
 {
-    [Table("")]
+    [Table("Contact")]
     public class Contact
     {
         [Key]

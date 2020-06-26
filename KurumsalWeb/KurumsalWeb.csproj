@@ -656,18 +656,19 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AboutU.cs" />
-    <Compile Include="Models\Admin.cs" />
-    <Compile Include="Models\Blog.cs" />
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\CorporateDB.cs" />
-    <Compile Include="Models\Identity.cs" />
-    <Compile Include="Models\Service.cs" />
-    <Compile Include="Models\sysdiagram.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DataContext\CorporateDBContext.cs" />
+    <Compile Include="Models\Model\AboutUs.cs" />
+    <Compile Include="Models\Model\Admin.cs" />
+    <Compile Include="Models\Model\Blog.cs" />
+    <Compile Include="Models\Model\Category.cs" />
+    <Compile Include="Models\Model\Contact.cs" />
+    <Compile Include="Models\Model\Identity.cs" />
+    <Compile Include="Models\Model\Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -686,6 +687,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Views\Identity\Index.cshtml" />
+    <Content Include="Views\Identity\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -695,6 +698,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\Identity\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
