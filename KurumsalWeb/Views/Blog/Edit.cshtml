@@ -1,0 +1,56 @@
+﻿@model KurumsalWeb.Models.Model.Blog
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Edit Category</h2>
+
+<div class="form">
+    @*<form class="form-validate form-horizontal" id="feedback_form" method="post" action="/Blog/Create/" enctype="multipart/form-data">*@
+
+    @using (Html.BeginForm("Edit", "Blog", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken();
+
+        <div class="form-group ">
+            <label for="cname" class="control-label col-lg-2">Title <span class="required">*</span></label>
+            <div class="col-lg-10">
+                <input class="form-control" id="Title" name="Title" minlength="5" type="text" required value="@Model.Title"/>
+            </div>
+        </div>
+        <div class="form-group ">
+            <label for="cemail" class="control-label col-lg-2">Category <span class="required">*</span></label>
+            <div class="col-lg-10">
+                @Html.DropDownList("CategoryId", null, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group ">
+            <label for="cemail" class="control-label col-lg-2">Contents <span class="required">*</span></label>
+            <div class="col-lg-10">
+                <textarea class="ckeditor" name="Contents">@Model.Contents</textarea>
+            </div>
+        </div>
+        <div class="form-group ">
+            <label for="curl" class="control-label col-lg-2">Previous Image</label>
+            <div class="col-lg-10">
+                <img src="@Model.ImageURL" width="150" height="100"/>
+            </div>
+        </div>
+        <div class="form-group ">
+            <label for="curl" class="control-label col-lg-2">Image</label>
+            <div class="col-lg-10">
+                <input type="file" class="form-control" name="ImageURL" accept=".jpg, .png, .jpeg" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-default" type="button"><a href="/Blog/Index">Cancel</a></button>
+            </div>
+        </div>
+    }
+
+
+    @*</form>*@
+</div>

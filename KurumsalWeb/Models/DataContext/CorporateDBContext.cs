@@ -22,6 +22,7 @@ namespace KurumsalWeb.Models.DataContext
         public DbSet<Contact> Contact { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Identity> Identity { get; set; }
+        public DbSet<Slider> Slider { get; set; }
 
     }
 }
