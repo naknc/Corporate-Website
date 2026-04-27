@@ -1,0 +1,27 @@
+@model KurumsalWeb.Models.Model.Contact
+@{
+    ViewBag.Title = "Contact";
+}
+
+<section class="hero-section">
+    <h1>Contact</h1>
+    <p>Reach us through our official channels.</p>
+</section>
+
+<section class="content-section">
+    <div class="content-card">
+        @if (Model != null)
+        {
+            <p><strong>Address:</strong> @Model.Address</p>
+            <p><strong>Phone:</strong> @Model.Phone</p>
+            <p><strong>Whatsapp:</strong> @Model.Whatsapp</p>
+            <p><strong>Facebook:</strong> @Model.Facebook</p>
+            <p><strong>Twitter:</strong> @Model.Twitter</p>
+            <p><strong>Instagram:</strong> @Model.Instagram</p>
+        }
+        else
+        {
+            <p>Contact details have not been added yet.</p>
+        }
+    </div>
+</section>

@@ -1,0 +1,21 @@
+@model KurumsalWeb.Models.Model.AboutUs
+@{
+    ViewBag.Title = "About";
+}
+
+<section class="hero-section">
+    <h1>About Us</h1>
+</section>
+
+<section class="content-section">
+    <div class="content-card rich-content">
+        @if (Model != null && !string.IsNullOrWhiteSpace(Model.Description))
+        {
+            @Html.Raw(Model.Description)
+        }
+        else
+        {
+            <p>About us content has not been added yet.</p>
+        }
+    </div>
+</section>

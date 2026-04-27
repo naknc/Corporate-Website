@@ -1,0 +1,53 @@
+@model IEnumerable<KurumsalWeb.Models.Model.Service>
+@using System.Linq
+@using System.Text.RegularExpressions
+@{
+    ViewBag.Title = "Services";
+}
+
+@functions {
+    public static string ToPlainText(string html)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            return string.Empty;
+        }
+
+        var noHtml = Regex.Replace(html, "<.*?>", " ");
+        return Regex.Replace(noHtml, @"\s+", " ").Trim();
+    }
+}
+
+<section class="hero-section">
+    <h1>Services</h1>
+    <p>What we offer.</p>
+</section>
+
+<section class="content-section">
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var service in Model)
+            {
+                <div class="col-sm-6 col-md-4">
+                    <article class="content-card">
+                        @if (!string.IsNullOrWhiteSpace(service.ImageURL))
+                        {
+                            <img class="content-card-image" src="@service.ImageURL" alt="@service.Title" />
+                        }
+                        <h3>@service.Title</h3>
+                        <p>@ToPlainText(service.Description)</p>
+                    </article>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-xs-12">
+                <div class="content-card">
+                    <p>No services have been added yet.</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>

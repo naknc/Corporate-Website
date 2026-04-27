@@ -1,4 +1,5 @@
 ﻿using KurumsalWeb.Models.DataContext;
+using KurumsalWeb.Models.Model;
 using KurumsalWeb.Models.ViewModel;
 using System;
 using System.Data.Entity;
@@ -12,14 +13,21 @@ namespace KurumsalWeb.Controllers
     {
         private readonly CorporateDBContext db = new CorporateDBContext();
 
+        private Identity GetSiteIdentity()
+        {
+            return db.Identity.FirstOrDefault();
+        }
+
         // GET: Home
         public ActionResult Index()
         {
             db.Configuration.LazyLoadingEnabled = false;
+            var identity = GetSiteIdentity();
+            ViewBag.SiteIdentity = identity;
 
             var model = new HomePageViewModel
             {
-                Identity = db.Identity.FirstOrDefault(),
+                Identity = identity,
                 AboutUs = db.AboutUs.FirstOrDefault(),
                 Contact = db.Contact.FirstOrDefault(),
                 Sliders = db.Slider.OrderBy(x => x.SliderId).Take(5).ToList(),
@@ -37,6 +45,7 @@ namespace KurumsalWeb.Controllers
         public ActionResult Blog()
         {
             db.Configuration.LazyLoadingEnabled = false;
+            ViewBag.SiteIdentity = GetSiteIdentity();
             var posts = db.Blog
                 .Include(x => x.Category)
                 .OrderByDescending(x => x.BlogId)
@@ -47,6 +56,7 @@ namespace KurumsalWeb.Controllers
         public ActionResult BlogDetail(int id)
         {
             db.Configuration.LazyLoadingEnabled = false;
+            ViewBag.SiteIdentity = GetSiteIdentity();
             var post = db.Blog
                 .Include(x => x.Category)
                 .SingleOrDefault(x => x.BlogId == id);
@@ -57,6 +67,30 @@ namespace KurumsalWeb.Controllers
             }
 
             return View(post);
+        }
+
+        public ActionResult About()
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+            ViewBag.SiteIdentity = GetSiteIdentity();
+            var about = db.AboutUs.FirstOrDefault();
+            return View(about);
+        }
+
+        public ActionResult Services()
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+            ViewBag.SiteIdentity = GetSiteIdentity();
+            var services = db.Service.OrderBy(x => x.ServiceId).ToList();
+            return View(services);
+        }
+
+        public ActionResult Contact()
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+            ViewBag.SiteIdentity = GetSiteIdentity();
+            var contact = db.Contact.FirstOrDefault();
+            return View(contact);
         }
 
         protected override void Dispose(bool disposing)

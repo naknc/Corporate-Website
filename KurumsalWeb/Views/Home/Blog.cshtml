@@ -1,6 +1,32 @@
 ﻿@model IEnumerable<KurumsalWeb.Models.Model.Blog>
+@using System.Linq
+@using System.Text.RegularExpressions
 @{
     ViewBag.Title = "Blog";
+}
+
+@functions {
+    public static string ToPlainText(string html)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            return string.Empty;
+        }
+
+        var noHtml = Regex.Replace(html, "<.*?>", " ");
+        return Regex.Replace(noHtml, @"\s+", " ").Trim();
+    }
+
+    public static string ToExcerpt(string html, int maxLength)
+    {
+        var text = ToPlainText(html);
+        if (text.Length <= maxLength)
+        {
+            return text;
+        }
+
+        return text.Substring(0, maxLength).Trim() + "...";
+    }
 }
 
 <section class="hero-section">
@@ -25,7 +51,7 @@
                         {
                             <p class="muted-text">@post.Category.CategoryName</p>
                         }
-                        <p>@Html.Raw(post.Contents)</p>
+                        <p>@ToExcerpt(post.Contents, 220)</p>
                     </article>
                 </div>
             }

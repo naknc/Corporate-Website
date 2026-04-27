@@ -1,7 +1,12 @@
-﻿@using KurumsalWeb.Models.ViewModel
+﻿@using KurumsalWeb.Models.Model
+@using KurumsalWeb.Models.ViewModel
 @{
     var pageModel = Model as HomePageViewModel;
-    var siteIdentity = pageModel != null ? pageModel.Identity : null;
+    var siteIdentity = ViewBag.SiteIdentity as Identity;
+    if (siteIdentity == null && pageModel != null)
+    {
+        siteIdentity = pageModel.Identity;
+    }
     var siteTitle = siteIdentity != null && !string.IsNullOrWhiteSpace(siteIdentity.Title)
         ? siteIdentity.Title
         : "Corporate Website";
@@ -34,10 +39,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
+                    <li><a href="/Home/About">About</a></li>
+                    <li><a href="/Home/Services">Services</a></li>
                     <li><a href="/Home/Blog">Blog</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="/Home/Contact">Contact</a></li>
                 </ul>
             </div>
         </div>

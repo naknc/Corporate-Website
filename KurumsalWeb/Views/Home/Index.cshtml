@@ -1,4 +1,5 @@
 ﻿@model KurumsalWeb.Models.ViewModel.HomePageViewModel
+@using System.Text.RegularExpressions
 @{
     ViewBag.Title = "Home";
     var identity = Model != null ? Model.Identity : null;
@@ -7,6 +8,30 @@
     var latestBlogs = Model != null ? Model.LatestBlogs : null;
     var aboutUs = Model != null ? Model.AboutUs : null;
     var contact = Model != null ? Model.Contact : null;
+}
+
+@functions {
+    public static string ToPlainText(string html)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            return string.Empty;
+        }
+
+        var noHtml = Regex.Replace(html, "<.*?>", " ");
+        return Regex.Replace(noHtml, @"\s+", " ").Trim();
+    }
+
+    public static string ToExcerpt(string html, int maxLength)
+    {
+        var text = ToPlainText(html);
+        if (text.Length <= maxLength)
+        {
+            return text;
+        }
+
+        return text.Substring(0, maxLength).Trim() + "...";
+    }
 }
 
 <section class="hero-section">
@@ -38,8 +63,15 @@
 
 <section class="content-section" id="about">
     <h2>About Us</h2>
-    <div class="content-card">
-        <p>@(aboutUs != null ? Html.Raw(aboutUs.Description).ToString() : "No content has been added yet.")</p>
+    <div class="content-card rich-content">
+        @if (aboutUs != null && !string.IsNullOrWhiteSpace(aboutUs.Description))
+        {
+            @Html.Raw(aboutUs.Description)
+        }
+        else
+        {
+            <p>No content has been added yet.</p>
+        }
     </div>
 </section>
 
@@ -57,7 +89,7 @@
                             <img class="content-card-image" src="@service.ImageURL" alt="@service.Title" />
                         }
                         <h3>@service.Title</h3>
-                        <p>@Html.Raw(service.Description)</p>
+                        <p>@ToExcerpt(service.Description, 180)</p>
                     </article>
                 </div>
             }
@@ -91,7 +123,7 @@
                         {
                             <p class="muted-text">@post.Category.CategoryName</p>
                         }
-                        <p>@Html.Raw(post.Contents)</p>
+                        <p>@ToExcerpt(post.Contents, 180)</p>
                         <p><a class="btn btn-default btn-sm" href="/Home/BlogDetail/@post.BlogId">Read More</a></p>
                     </article>
                 </div>
