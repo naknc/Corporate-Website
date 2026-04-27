@@ -3,7 +3,7 @@ Corporate website project with an admin panel using ASP.NET MVC 5 and Entity Fra
 ## Quick Setup
 
 1. Update `KurumsalWeb/Web.config` connection string (`CorporateWebDB`) for your SQL Server.
-2. Set initial admin credentials with:
+2. Set initial admin credentials with secure values (defaults are placeholders and do not seed):
    - `AdminSeedEmail`
    - `AdminSeedPassword`
 3. Restore NuGet packages.

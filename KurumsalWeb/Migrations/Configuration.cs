@@ -18,10 +18,14 @@
 
         protected override void Seed(KurumsalWeb.Models.DataContext.CorporateDBContext context)
         {
-            var adminEmail = ConfigurationManager.AppSettings["AdminSeedEmail"] ?? "admin@local";
-            var adminPassword = ConfigurationManager.AppSettings["AdminSeedPassword"] ?? "ChangeMe123!";
+            var adminEmail = ConfigurationManager.AppSettings["AdminSeedEmail"];
+            var adminPassword = ConfigurationManager.AppSettings["AdminSeedPassword"];
 
-            if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+            // Do not seed default credentials. Seed runs only when explicit secure values are provided.
+            if (string.IsNullOrWhiteSpace(adminEmail) ||
+                string.IsNullOrWhiteSpace(adminPassword) ||
+                adminEmail == "__SET_ADMIN_EMAIL__" ||
+                adminPassword == "__SET_ADMIN_PASSWORD__")
             {
                 return;
             }
