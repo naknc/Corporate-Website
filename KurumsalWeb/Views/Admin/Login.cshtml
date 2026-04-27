@@ -26,6 +26,7 @@
 <body>
     <div>
         <form class="login-form" method="post" action="/Admin/Login/">
+            @Html.AntiForgeryToken()
             <div class="login-wrap">
                 @if (Session["adminid"]==null)
                 {

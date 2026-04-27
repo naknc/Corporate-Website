@@ -1,18 +1,120 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿:root {
+    --brand-dark: #0f1f33;
+    --brand-mid: #1f3f62;
+    --brand-soft: #f3f6fa;
+    --text-main: #1f2933;
+    --text-muted: #687684;
+    --card-shadow: 0 8px 24px rgba(15, 31, 51, 0.08);
 }
 
-/* Set padding to keep content from hitting the edges */
+body {
+    padding-top: 64px;
+    margin: 0;
+    color: var(--text-main);
+    background: linear-gradient(180deg, #f7faff 0%, #ffffff 40%, #f8fafc 100%);
+}
+
+.site-navbar {
+    border: 0;
+    background-color: var(--brand-dark);
+}
+
+.site-navbar .navbar-brand,
+.site-navbar .navbar-nav > li > a {
+    color: #ffffff !important;
+}
+
+.site-navbar .navbar-nav > li > a:hover,
+.site-navbar .navbar-nav > li > a:focus {
+    color: #d8e9ff !important;
+}
+
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 28px 15px 42px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.hero-section {
+    background: linear-gradient(120deg, var(--brand-dark), var(--brand-mid));
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 36px 28px;
+    margin-bottom: 24px;
 }
 
+.hero-section h1 {
+    margin: 0 0 10px;
+    font-size: 34px;
+    line-height: 1.2;
+}
+
+.hero-section p {
+    margin: 0;
+    opacity: 0.95;
+    font-size: 16px;
+}
+
+.content-section {
+    margin-bottom: 22px;
+}
+
+.content-section h2 {
+    margin: 0 0 14px;
+    font-size: 24px;
+}
+
+.content-card {
+    background: #ffffff;
+    border: 1px solid #e6ebf2;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 16px;
+    margin-bottom: 16px;
+    height: 100%;
+}
+
+.content-card h3 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.content-card p {
+    color: var(--text-main);
+}
+
+.content-card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.muted-text {
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.site-footer {
+    border-top: 1px solid #dce3eb;
+    background: #ffffff;
+    color: var(--text-muted);
+    padding: 14px 0;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .hero-section {
+        padding: 26px 18px;
+    }
+
+    .hero-section h1 {
+        font-size: 28px;
+    }
+
+    .content-card-image {
+        height: 160px;
+    }
+}

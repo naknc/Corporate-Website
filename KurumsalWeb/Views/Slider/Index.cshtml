@@ -1,0 +1,41 @@
+﻿@model IEnumerable<KurumsalWeb.Models.Model.Slider>
+@{
+    ViewBag.Title = "Sliders";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Slider List</h2>
+
+<p>
+    <a class="btn btn-primary" href="/Slider/Create">Add Slider</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th style="width: 180px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(item.ImageURL))
+                    {
+                        <img src="@item.ImageURL" alt="@item.Title" style="width: 140px; height: 70px; object-fit: cover;" />
+                    }
+                </td>
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="/Slider/Edit/@item.SliderId">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="/Slider/Delete/@item.SliderId" onclick="return confirm('Delete this slider?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

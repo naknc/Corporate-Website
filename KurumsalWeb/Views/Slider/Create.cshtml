@@ -1,0 +1,44 @@
+﻿@model KurumsalWeb.Models.Model.Slider
+@{
+    ViewBag.Title = "Create Slider";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Add Slider</h2>
+
+@using (Html.BeginForm("Create", "Slider", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">Title</label>
+        <div class="col-lg-10">
+            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", maxlength = "30" })
+            @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">Description</label>
+        <div class="col-lg-10">
+            @Html.TextAreaFor(x => x.Description, new { @class = "form-control", maxlength = "150", rows = "4" })
+            @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-2">Image</label>
+        <div class="col-lg-10">
+            <input type="file" class="form-control" name="ImageURL" accept=".jpg,.jpeg,.png,.webp" />
+            @Html.ValidationMessage("ImageURL", "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/Slider/Index" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+}

@@ -1,16 +1,17 @@
-﻿using KurumsalWeb.Models.DataContext;
+﻿using KurumsalWeb.Filters;
+using KurumsalWeb.Helpers;
+using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace KurumsalWeb.Controllers
 {
+    [AdminAuthorize]
     public class ServiceController : Controller
     {
         private CorporateDBContext db = new CorporateDBContext();
@@ -26,20 +27,22 @@ namespace KurumsalWeb.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(Service service, HttpPostedFileBase ImageURL)
         {
             if (ModelState.IsValid)
             {
                 if (ImageURL != null)
                 {
-                    WebImage img = new WebImage(ImageURL.InputStream);
-                    FileInfo imginfo = new FileInfo(ImageURL.FileName);
+                    string imagePath;
+                    string uploadError;
+                    if (!ImageUploadHelper.TrySaveResizedImage(Server, ImageURL, "/Uploads/Service", 500, 500, out imagePath, out uploadError))
+                    {
+                        ModelState.AddModelError("ImageURL", uploadError);
+                        return View(service);
+                    }
 
-                    string servicename = Guid.NewGuid().ToString() + imginfo.Extension;
-                    img.Resize(500, 500);
-                    img.Save("~/Uploads/Service/" + servicename);
-
-                    service.ImageURL = "/Uploads/Service/" + servicename;
+                    service.ImageURL = imagePath;
                 }
                 db.Service.Add(service);
                 db.SaveChanges();
@@ -64,6 +67,7 @@ namespace KurumsalWeb.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int? id, Service service, HttpPostedFileBase ImageURL)
         {
             if (ModelState.IsValid)
@@ -71,19 +75,19 @@ namespace KurumsalWeb.Controllers
                 var s = db.Service.Where(x => x.ServiceId == id).SingleOrDefault();
                 if (ImageURL != null)
                 {
+                    string imagePath;
+                    string uploadError;
+                    if (!ImageUploadHelper.TrySaveResizedImage(Server, ImageURL, "/Uploads/Service", 500, 500, out imagePath, out uploadError))
+                    {
+                        ModelState.AddModelError("ImageURL", uploadError);
+                        return View(service);
+                    }
 
-                    if (System.IO.File.Exists(Server.MapPath(s.ImageURL)))
+                    if (!string.IsNullOrWhiteSpace(s.ImageURL) && System.IO.File.Exists(Server.MapPath(s.ImageURL)))
                     {
                         System.IO.File.Delete(Server.MapPath(s.ImageURL));
                     }
-                    WebImage img = new WebImage(ImageURL.InputStream);
-                    FileInfo imginfo = new FileInfo(ImageURL.FileName);
-
-                    string servicename = Guid.NewGuid().ToString() + imginfo.Extension;
-                    img.Resize(500, 500);
-                    img.Save("~/Uploads/Service/" + servicename);
-
-                    s.ImageURL = "/Uploads/Service/" + servicename;
+                    s.ImageURL = imagePath;
 
                 }
 
@@ -96,10 +100,6 @@ namespace KurumsalWeb.Controllers
         }
         public ActionResult Delete(int id)
         {
-            if (id==null)
-            {
-                return HttpNotFound();
-            }
             var s = db.Service.Find(id);
             if (s==null)
             {

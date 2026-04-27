@@ -1,9 +1,4 @@
-﻿@{ 
-    if (Session["adminid"]==null)
-    {
-        Response.Redirect("/Admin/Login");
-    }
-}
+﻿
 
 <!DOCTYPE html>
 <html>
@@ -359,6 +354,12 @@
                         <a class="" href="/Service/Index/">
                             <i class="icon_genius"></i>
                             <span>Services</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" href="/Slider/Index/">
+                            <i class="icon_genius"></i>
+                            <span>Sliders</span>
                         </a>
                     </li>
                     <li class="sub-menu">

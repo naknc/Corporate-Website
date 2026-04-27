@@ -1,14 +1,15 @@
-﻿using KurumsalWeb.Models.DataContext;
+﻿using KurumsalWeb.Filters;
+using KurumsalWeb.Helpers;
+using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
 using System;
-using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace KurumsalWeb.Controllers
 {
+    [AdminAuthorize]
     public class IdentityController : Controller
     {
         CorporateDBContext db = new CorporateDBContext();
@@ -37,18 +38,20 @@ namespace KurumsalWeb.Controllers
 
                 if (LogoURL != null)
                 {
-                    if (System.IO.File.Exists(Server.MapPath(iden.LogoURL)))
+                    string imagePath;
+                    string uploadError;
+                    if (!ImageUploadHelper.TrySaveResizedImage(Server, LogoURL, "/Uploads/Identity", 300, 200, out imagePath, out uploadError))
+                    {
+                        ModelState.AddModelError("LogoURL", uploadError);
+                        return View(identity);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(iden.LogoURL) && System.IO.File.Exists(Server.MapPath(iden.LogoURL)))
                     {
                         System.IO.File.Delete(Server.MapPath(iden.LogoURL));
                     }
-                    WebImage img = new WebImage(LogoURL.InputStream);
-                    FileInfo imginfo = new FileInfo(LogoURL.FileName);
 
-                    string logoname = LogoURL.FileName + imginfo.Extension;
-                    img.Resize(300, 200);
-                    img.Save("~/Uploads/Identity/"+logoname);
-
-                    iden.LogoURL = "/Uploads/Identity/" + logoname;
+                    iden.LogoURL = imagePath;
                 }
                 iden.Title = identity.Title;
                 iden.Keywords = identity.Keywords;

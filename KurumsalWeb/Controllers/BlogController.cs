@@ -1,16 +1,17 @@
-﻿using KurumsalWeb.Models.DataContext;
+﻿using KurumsalWeb.Filters;
+using KurumsalWeb.Helpers;
+using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace KurumsalWeb.Controllers
 {
+    [AdminAuthorize]
     public class BlogController : Controller
     {
         private CorporateDBContext db = new CorporateDBContext();
@@ -34,14 +35,16 @@ namespace KurumsalWeb.Controllers
         {
             if (ImageURL != null)
             {
-                WebImage img = new WebImage(ImageURL.InputStream);
-                FileInfo imginfo = new FileInfo(ImageURL.FileName);
+                string imagePath;
+                string uploadError;
+                if (!ImageUploadHelper.TrySaveResizedImage(Server, ImageURL, "/Uploads/Blog", 600, 400, out imagePath, out uploadError))
+                {
+                    ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", blog.CategoryId);
+                    ModelState.AddModelError("ImageURL", uploadError);
+                    return View(blog);
+                }
 
-                string blogimgname = Guid.NewGuid().ToString() + imginfo.Extension;
-                img.Resize(600, 400);
-                img.Save("~/Uploads/Blog/" + blogimgname);
-
-                blog.ImageURL = "/Uploads/Blog/" + blogimgname;
+                blog.ImageURL = imagePath;
             }
             db.Blog.Add(blog);
             db.SaveChanges();
@@ -49,10 +52,6 @@ namespace KurumsalWeb.Controllers
         }
         public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return HttpNotFound();
-            }
             var b = db.Blog.Where(x => x.BlogId == id).SingleOrDefault();
             if (b == null)
             {
@@ -71,19 +70,21 @@ namespace KurumsalWeb.Controllers
                 var b = db.Blog.Where(x => x.BlogId == id).SingleOrDefault();
                 if (ImageURL != null)
                 {
+                    string imagePath;
+                    string uploadError;
+                    if (!ImageUploadHelper.TrySaveResizedImage(Server, ImageURL, "/Uploads/Blog", 600, 400, out imagePath, out uploadError))
+                    {
+                        ViewBag.CategoryId = new SelectList(db.Category, "CategoryId", "CategoryName", blog.CategoryId);
+                        ModelState.AddModelError("ImageURL", uploadError);
+                        return View(blog);
+                    }
 
-                    if (System.IO.File.Exists(Server.MapPath(b.ImageURL)))
+                    if (!string.IsNullOrWhiteSpace(b.ImageURL) && System.IO.File.Exists(Server.MapPath(b.ImageURL)))
                     {
                         System.IO.File.Delete(Server.MapPath(b.ImageURL));
                     }
-                    WebImage img = new WebImage(ImageURL.InputStream);
-                    FileInfo imginfo = new FileInfo(ImageURL.FileName);
 
-                    string blogimgname = Guid.NewGuid().ToString() + imginfo.Extension;
-                    img.Resize(600, 400);
-                    img.Save("~/Uploads/Blog/" + blogimgname);
-
-                    b.ImageURL = "/Uploads/Blog/" + blogimgname;
+                    b.ImageURL = imagePath;
                 }
                 b.Title = blog.Title;
                 b.Contents = blog.Contents;
@@ -101,7 +102,7 @@ namespace KurumsalWeb.Controllers
             {
                 return HttpNotFound();
             }
-            if (System.IO.File.Exists(Server.MapPath(b.ImageURL)))
+            if (!string.IsNullOrWhiteSpace(b.ImageURL) && System.IO.File.Exists(Server.MapPath(b.ImageURL)))
             {
                 System.IO.File.Delete(Server.MapPath(b.ImageURL));
             }

@@ -1,4 +1,5 @@
-﻿using KurumsalWeb.Models.DataContext;
+﻿using KurumsalWeb.Filters;
+using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace KurumsalWeb.Controllers
 {
+    [AdminAuthorize]
     public class AboutUsController : Controller
     {
         CorporateDBContext db = new CorporateDBContext();

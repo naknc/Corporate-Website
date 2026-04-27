@@ -1,23 +1,39 @@
 ﻿namespace KurumsalWeb.Migrations
 {
+    using KurumsalWeb.Models.Model;
     using System;
+    using System.Configuration;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.Web.Helpers;
 
     internal sealed class Configuration : DbMigrationsConfiguration<KurumsalWeb.Models.DataContext.CorporateDBContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationDataLossAllowed = false;
         }
 
         protected override void Seed(KurumsalWeb.Models.DataContext.CorporateDBContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            var adminEmail = ConfigurationManager.AppSettings["AdminSeedEmail"] ?? "admin@local";
+            var adminPassword = ConfigurationManager.AppSettings["AdminSeedPassword"] ?? "ChangeMe123!";
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method
-            //  to avoid creating duplicate seed data.
+            if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+            {
+                return;
+            }
+
+            context.Admin.AddOrUpdate(
+                x => x.Email,
+                new Admin
+                {
+                    Email = adminEmail,
+                    Password = Crypto.HashPassword(adminPassword),
+                    Authentication = "Admin"
+                });
         }
     }
 }

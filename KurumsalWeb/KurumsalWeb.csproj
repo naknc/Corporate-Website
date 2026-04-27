@@ -898,9 +898,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
+    <Compile Include="Controllers\SliderController.cs" />
+    <Compile Include="Filters\AdminAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ImageUploadHelper.cs" />
+    <Compile Include="Migrations\202604271405000_InitialCreate.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DataContext\CorporateDBContext.cs" />
     <Compile Include="Models\Model\AboutUs.cs" />
@@ -911,6 +915,7 @@
     <Compile Include="Models\Model\Identity.cs" />
     <Compile Include="Models\Model\Service.cs" />
     <Compile Include="Models\Model\Slider.cs" />
+    <Compile Include="Models\ViewModel\HomePageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -949,6 +954,9 @@
     <Content Include="Views\Blog\Index.cshtml" />
     <Content Include="Views\Blog\Create.cshtml" />
     <Content Include="Views\Blog\Edit.cshtml" />
+    <Content Include="Views\Slider\Index.cshtml" />
+    <Content Include="Views\Slider\Create.cshtml" />
+    <Content Include="Views\Slider\Edit.cshtml" />
     <Content Include="Views\Admin\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -962,6 +970,7 @@
     <Folder Include="Uploads\Blog\" />
     <Folder Include="Uploads\Identity\" />
     <Folder Include="Uploads\Service\" />
+    <Folder Include="Uploads\Slider\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

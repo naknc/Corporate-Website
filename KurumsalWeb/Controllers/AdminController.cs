@@ -1,4 +1,5 @@
 ﻿
+using KurumsalWeb.Filters;
 using KurumsalWeb.Models;
 using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
@@ -6,10 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace KurumsalWeb.Controllers
 {
+    [AdminAuthorize]
     public class AdminController : Controller
     {
         CorporateDBContext db = new CorporateDBContext();
@@ -19,20 +22,38 @@ namespace KurumsalWeb.Controllers
             var sorgu = db.Category.ToList();
             return View(sorgu);
         }
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(Admin admin)
         {
-            var login = db.Admin.Where(x => x.Email == admin.Email).SingleOrDefault();
-            if (login.Email==admin.Email && login.Password==admin.Password)
+            if (admin == null || string.IsNullOrWhiteSpace(admin.Email) || string.IsNullOrWhiteSpace(admin.Password))
+            {
+                ViewBag.Alert = "Username or password is not right!";
+                return View(admin);
+            }
+
+            var login = db.Admin.SingleOrDefault(x => x.Email == admin.Email);
+            if (login != null && IsPasswordValid(admin.Password, login.Password))
             {
                 Session["adminid"] = login.AdminId;
                 Session["email"] = login.Email;
+
+                // Upgrade legacy plain-text passwords to hash after successful login.
+                if (login.Password == admin.Password)
+                {
+                    login.Password = Crypto.HashPassword(admin.Password);
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index", "Admin");
             }
+
             ViewBag.Alert = "Username or password is not right!";
             return View(admin);
         }
@@ -42,6 +63,28 @@ namespace KurumsalWeb.Controllers
             Session["email"] = null;
             Session.Abandon();
             return RedirectToAction("Login", "Admin");
+        }
+
+        private static bool IsPasswordValid(string inputPassword, string storedPassword)
+        {
+            if (string.IsNullOrEmpty(storedPassword))
+            {
+                return false;
+            }
+
+            if (storedPassword == inputPassword)
+            {
+                return true;
+            }
+
+            try
+            {
+                return Crypto.VerifyHashedPassword(storedPassword, inputPassword);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

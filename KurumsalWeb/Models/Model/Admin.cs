@@ -15,7 +15,7 @@ namespace KurumsalWeb.Models.Model
         public int AdminId { get; set; }
         [Required, StringLength(50, ErrorMessage = "Must be 50 characters!")]
         public string Email { get; set; }
-        [Required, StringLength(50, ErrorMessage = "Must be 50 characters!")]
+        [Required, StringLength(255, ErrorMessage = "Must be 255 characters!")]
         public string Password { get; set; }
         public string Authentication { get; set; }
     }

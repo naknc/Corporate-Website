@@ -9,6 +9,7 @@
 
 <div class="form">
     <form class="form-validate form-horizontal" id="feedback_form" method="post" action="/Service/Edit/@Model.ServiceId" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
         <div class="form-group ">
             <label for="cname" class="control-label col-lg-2">Title <span class="required">*</span></label>
             <div class="col-lg-10">

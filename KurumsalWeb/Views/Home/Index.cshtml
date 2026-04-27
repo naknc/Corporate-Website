@@ -1,7 +1,127 @@
-﻿
+﻿@model KurumsalWeb.Models.ViewModel.HomePageViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Home";
+    var identity = Model != null ? Model.Identity : null;
+    var sliders = Model != null ? Model.Sliders : null;
+    var services = Model != null ? Model.Services : null;
+    var latestBlogs = Model != null ? Model.LatestBlogs : null;
+    var aboutUs = Model != null ? Model.AboutUs : null;
+    var contact = Model != null ? Model.Contact : null;
 }
 
-<h2>Index</h2>
+<section class="hero-section">
+    <h1>@(identity != null ? identity.Title : "Corporate Website")</h1>
+    <p>@(identity != null ? identity.Description : "Professional services and corporate updates.")</p>
+</section>
 
+@if (sliders != null && sliders.Count > 0)
+{
+    <section class="content-section" id="highlights">
+        <h2>Highlights</h2>
+        <div class="row">
+            @foreach (var slide in sliders)
+            {
+                <div class="col-sm-6 col-md-4">
+                    <article class="content-card">
+                        @if (!string.IsNullOrWhiteSpace(slide.ImageURL))
+                        {
+                            <img class="content-card-image" src="@slide.ImageURL" alt="@slide.Title" />
+                        }
+                        <h3>@slide.Title</h3>
+                        <p>@slide.Description</p>
+                    </article>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+<section class="content-section" id="about">
+    <h2>About Us</h2>
+    <div class="content-card">
+        <p>@(aboutUs != null ? Html.Raw(aboutUs.Description).ToString() : "No content has been added yet.")</p>
+    </div>
+</section>
+
+<section class="content-section" id="services">
+    <h2>Services</h2>
+    <div class="row">
+        @if (services != null && services.Count > 0)
+        {
+            foreach (var service in services)
+            {
+                <div class="col-sm-6 col-md-4">
+                    <article class="content-card">
+                        @if (!string.IsNullOrWhiteSpace(service.ImageURL))
+                        {
+                            <img class="content-card-image" src="@service.ImageURL" alt="@service.Title" />
+                        }
+                        <h3>@service.Title</h3>
+                        <p>@Html.Raw(service.Description)</p>
+                    </article>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-xs-12">
+                <div class="content-card">
+                    <p>No services have been added yet.</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="content-section" id="blog">
+    <h2>Latest Blog Posts</h2>
+    <div class="row">
+        @if (latestBlogs != null && latestBlogs.Count > 0)
+        {
+            foreach (var post in latestBlogs)
+            {
+                <div class="col-sm-6 col-md-4">
+                    <article class="content-card">
+                        @if (!string.IsNullOrWhiteSpace(post.ImageURL))
+                        {
+                            <img class="content-card-image" src="@post.ImageURL" alt="@post.Title" />
+                        }
+                        <h3>@post.Title</h3>
+                        @if (post.Category != null)
+                        {
+                            <p class="muted-text">@post.Category.CategoryName</p>
+                        }
+                        <p>@Html.Raw(post.Contents)</p>
+                    </article>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-xs-12">
+                <div class="content-card">
+                    <p>No blog posts have been added yet.</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="content-section" id="contact">
+    <h2>Contact</h2>
+    <div class="content-card">
+        @if (contact != null)
+        {
+            <p><strong>Address:</strong> @contact.Address</p>
+            <p><strong>Phone:</strong> @contact.Phone</p>
+            <p><strong>Whatsapp:</strong> @contact.Whatsapp</p>
+            <p><strong>Facebook:</strong> @contact.Facebook</p>
+            <p><strong>Twitter:</strong> @contact.Twitter</p>
+            <p><strong>Instagram:</strong> @contact.Instagram</p>
+        }
+        else
+        {
+            <p>Contact details have not been added yet.</p>
+        }
+    </div>
+</section>

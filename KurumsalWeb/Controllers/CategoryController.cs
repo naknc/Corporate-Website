@@ -6,11 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using KurumsalWeb.Filters;
 using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
 
 namespace KurumsalWeb.Controllers
 {
+    [AdminAuthorize]
     public class CategoryController : Controller
     {
         private CorporateDBContext db = new CorporateDBContext();
