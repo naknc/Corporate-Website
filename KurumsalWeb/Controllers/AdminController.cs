@@ -1,10 +1,9 @@
-﻿
-using KurumsalWeb.Filters;
-using KurumsalWeb.Models;
+﻿using KurumsalWeb.Filters;
 using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
+using KurumsalWeb.Models.ViewModel;
 using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
@@ -19,8 +18,27 @@ namespace KurumsalWeb.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            var sorgu = db.Category.ToList();
-            return View(sorgu);
+            db.Configuration.LazyLoadingEnabled = false;
+            var model = new AdminDashboardViewModel
+            {
+                CategoryCount = db.Category.Count(),
+                BlogCount = db.Blog.Count(),
+                ServiceCount = db.Service.Count(),
+                SliderCount = db.Slider.Count(),
+                ContactCount = db.Contact.Count(),
+                AdminCount = db.Admin.Count(),
+                LatestBlogs = db.Blog
+                    .Include(x => x.Category)
+                    .OrderByDescending(x => x.BlogId)
+                    .Take(5)
+                    .ToList(),
+                LatestServices = db.Service
+                    .OrderByDescending(x => x.ServiceId)
+                    .Take(5)
+                    .ToList()
+            };
+
+            return View(model);
         }
         [AllowAnonymous]
         public ActionResult Login()
@@ -85,6 +103,15 @@ namespace KurumsalWeb.Controllers
             {
                 return false;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

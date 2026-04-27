@@ -1,0 +1,35 @@
+﻿@model KurumsalWeb.Models.Model.Blog
+@{
+    ViewBag.Title = Model != null ? Model.Title : "Blog Detail";
+}
+
+@if (Model == null)
+{
+    <section class="content-section">
+        <div class="content-card">
+            <p>Blog post could not be found.</p>
+        </div>
+    </section>
+}
+else
+{
+    <section class="hero-section">
+        <h1>@Model.Title</h1>
+        @if (Model.Category != null)
+        {
+            <p>@Model.Category.CategoryName</p>
+        }
+    </section>
+
+    <section class="content-section">
+        <article class="content-card">
+            @if (!string.IsNullOrWhiteSpace(Model.ImageURL))
+            {
+                <img class="content-card-image blog-detail-image" src="@Model.ImageURL" alt="@Model.Title" />
+            }
+            <div>@Html.Raw(Model.Contents)</div>
+            <hr />
+            <a class="btn btn-default" href="/Home/Blog">Back to Blog</a>
+        </article>
+    </section>
+}

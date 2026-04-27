@@ -89,6 +89,11 @@ body {
     margin-bottom: 10px;
 }
 
+.blog-detail-image {
+    height: auto;
+    max-height: 520px;
+}
+
 .muted-text {
     color: var(--text-muted);
     margin-bottom: 8px;

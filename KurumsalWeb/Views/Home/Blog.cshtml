@@ -1,0 +1,42 @@
+﻿@model IEnumerable<KurumsalWeb.Models.Model.Blog>
+@{
+    ViewBag.Title = "Blog";
+}
+
+<section class="hero-section">
+    <h1>Blog</h1>
+    <p>Latest updates and announcements.</p>
+</section>
+
+<section class="content-section">
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var post in Model)
+            {
+                <div class="col-sm-6 col-md-4">
+                    <article class="content-card">
+                        @if (!string.IsNullOrWhiteSpace(post.ImageURL))
+                        {
+                            <img class="content-card-image" src="@post.ImageURL" alt="@post.Title" />
+                        }
+                        <h3><a href="/Home/BlogDetail/@post.BlogId">@post.Title</a></h3>
+                        @if (post.Category != null)
+                        {
+                            <p class="muted-text">@post.Category.CategoryName</p>
+                        }
+                        <p>@Html.Raw(post.Contents)</p>
+                    </article>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-xs-12">
+                <div class="content-card">
+                    <p>No blog posts have been published yet.</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>

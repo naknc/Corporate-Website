@@ -915,6 +915,7 @@
     <Compile Include="Models\Model\Identity.cs" />
     <Compile Include="Models\Model\Service.cs" />
     <Compile Include="Models\Model\Slider.cs" />
+    <Compile Include="Models\ViewModel\AdminDashboardViewModel.cs" />
     <Compile Include="Models\ViewModel\HomePageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -932,6 +933,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_SiteLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Blog.cshtml" />
+    <Content Include="Views\Home\BlogDetail.cshtml" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Views\Identity\Index.cshtml" />

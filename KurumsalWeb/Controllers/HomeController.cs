@@ -34,6 +34,31 @@ namespace KurumsalWeb.Controllers
             return View(model);
         }
 
+        public ActionResult Blog()
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+            var posts = db.Blog
+                .Include(x => x.Category)
+                .OrderByDescending(x => x.BlogId)
+                .ToList();
+            return View(posts);
+        }
+
+        public ActionResult BlogDetail(int id)
+        {
+            db.Configuration.LazyLoadingEnabled = false;
+            var post = db.Blog
+                .Include(x => x.Category)
+                .SingleOrDefault(x => x.BlogId == id);
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(post);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
