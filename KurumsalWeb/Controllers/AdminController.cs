@@ -2,6 +2,7 @@
 using KurumsalWeb.Models.DataContext;
 using KurumsalWeb.Models.Model;
 using KurumsalWeb.Models.ViewModel;
+using System.Configuration;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -43,13 +44,17 @@ namespace KurumsalWeb.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
+            EnsureSeedAdminAccount();
+            ViewBag.Alert = TempData["Alert"];
             return View();
         }
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [SafeValidateAntiForgeryToken]
         public ActionResult Login(Admin admin)
         {
+            EnsureSeedAdminAccount();
+
             if (admin == null || string.IsNullOrWhiteSpace(admin.Email) || string.IsNullOrWhiteSpace(admin.Password))
             {
                 ViewBag.Alert = "Username or password is not right!";
@@ -102,6 +107,43 @@ namespace KurumsalWeb.Controllers
             catch
             {
                 return false;
+            }
+        }
+
+        private void EnsureSeedAdminAccount()
+        {
+            var seedEmail = ConfigurationManager.AppSettings["AdminSeedEmail"];
+            var seedPassword = ConfigurationManager.AppSettings["AdminSeedPassword"];
+
+            if (string.IsNullOrWhiteSpace(seedEmail) ||
+                string.IsNullOrWhiteSpace(seedPassword) ||
+                seedEmail == "__SET_ADMIN_EMAIL__" ||
+                seedPassword == "__SET_ADMIN_PASSWORD__")
+            {
+                return;
+            }
+
+            var admin = db.Admin.SingleOrDefault(x => x.Email == seedEmail);
+            if (admin == null)
+            {
+                db.Admin.Add(new Admin
+                {
+                    Email = seedEmail,
+                    Password = Crypto.HashPassword(seedPassword),
+                    Authentication = "Admin"
+                });
+                db.SaveChanges();
+                return;
+            }
+
+            if (!IsPasswordValid(seedPassword, admin.Password))
+            {
+                admin.Password = Crypto.HashPassword(seedPassword);
+                if (string.IsNullOrWhiteSpace(admin.Authentication))
+                {
+                    admin.Authentication = "Admin";
+                }
+                db.SaveChanges();
             }
         }
 

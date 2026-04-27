@@ -900,6 +900,7 @@
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\SliderController.cs" />
     <Compile Include="Filters\AdminAuthorizeAttribute.cs" />
+    <Compile Include="Filters\SafeValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

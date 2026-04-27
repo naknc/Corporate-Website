@@ -1,0 +1,20 @@
+services:
+  sql:
+    image: mcr.microsoft.com/azure-sql-edge:1.0.7
+    container_name: corporate-web-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Strong!Passw0rd"
+      MSSQL_PID: "Developer"
+    ports:
+      - "14333:1433"
+
+  corporate-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: corporate-web-app
+    depends_on:
+      - sql
+    ports:
+      - "8080:8080"
